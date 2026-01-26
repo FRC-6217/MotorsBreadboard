@@ -6,7 +6,9 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.ctre.phoenix6.hardware.TalonFX; // For Falcon 500
+import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.controls.DutyCycleOut;
+import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -32,15 +34,30 @@ public class Motors extends SubsystemBase {
 
   /** Creates a new Subsystem. */
   public Motors() {
-      motorA = new TalonFX(MotorConstants.kMotorACANId);
-      motorB = new TalonFX(MotorConstants.kMotorBCANId);
-      motorX = new SparkMax(MotorConstants.kMotorXCANId, MotorType.kBrushless);
-      motorY = new SparkMax(MotorConstants.kMotorYCANId, MotorType.kBrushless);
+    // Create motor variables
+    motorA = new TalonFX(MotorConstants.kMotorACANId);
+    motorB = new TalonFX(MotorConstants.kMotorBCANId);
+    motorX = new SparkMax(MotorConstants.kMotorXCANId, MotorType.kBrushless);
+    motorY = new SparkMax(MotorConstants.kMotorYCANId, MotorType.kBrushless);
 
-      SmartDashboard.putNumber(smartDashboadMotorA, MotorConstants.initialMotorSpeed);
-      SmartDashboard.putNumber(smartDashboadMotorB, MotorConstants.initialMotorSpeed);
-      SmartDashboard.putNumber(smartDashboadMotorX, MotorConstants.initialMotorSpeed);
-      SmartDashboard.putNumber(smartDashboadMotorY, MotorConstants.initialMotorSpeed);
+    // Initialize the SmartDashboard for requested speeds
+    SmartDashboard.putNumber(smartDashboadMotorA, MotorConstants.initialMotorSpeed);
+    SmartDashboard.putNumber(smartDashboadMotorB, MotorConstants.initialMotorSpeed);
+    SmartDashboard.putNumber(smartDashboadMotorX, MotorConstants.initialMotorSpeed);
+    SmartDashboard.putNumber(smartDashboadMotorY, MotorConstants.initialMotorSpeed);
+
+    // Configure TalonFX PID Control
+    var slot0Configs = new Slot0Configs();
+    slot0Configs.kS = MotorConstants.kS_talonFx;
+    slot0Configs.kV = MotorConstants.kV_talonFx;
+    slot0Configs.kP = MotorConstants.kP_talonFx;
+    slot0Configs.kI = MotorConstants.kI_talonFx;
+    slot0Configs.kD = MotorConstants.kD_talonFx;
+    motorA.getConfigurator().apply(slot0Configs);
+    motorB.getConfigurator().apply(slot0Configs);
+
+    // create a velocity closed-loop request, voltage output, slot 0 configs
+    final VelocityVoltage velocityRequest = new VelocityVoltage(0).withSlot(0);
   }
 
   public void toggleMotor (char motor) {
@@ -64,16 +81,34 @@ public class Motors extends SubsystemBase {
       if (runningA) {
         SmartDashboard.getNumber(smartDashboadMotorA, speedA);
         motorA.setControl(new DutyCycleOut(speedA));
+        /* 
+        // Use PID Control
+        // set velocity based on max speed and requested percentage
+        motorA.setControl(velocityRequest.withVelocity(MotorConstants.maxRPS_talonFx * speedA).withFeedForward(MotorConstants.feedForward_talonFx));
+        */
       }
       else {
         motorA.setControl(new DutyCycleOut(0));
+        /* 
+        // Use PID Control
+        motorA.setControl(velocityRequest.withVelocity(0.0).withFeedForward(MotorConstants.feedForward_talonFx));
+        */
       }
       if (runningB) {
         SmartDashboard.getNumber(smartDashboadMotorB, speedB);
         motorB.setControl(new DutyCycleOut(speedB));
+        /* 
+        // Use PID Control
+        // set velocity based on max speed and requested percentage
+        motorB.setControl(velocityRequest.withVelocity(MotorConstants.maxRPS_talonFx * speedB).withFeedForward(MotorConstants.feedForward_talonFx));
+        */
       }
       else {
         motorB.setControl(new DutyCycleOut(0));
+        /* 
+        // Use PID Control
+        motorB.setControl(velocityRequest.withVelocity(0.0).withFeedForward(MotorConstants.feedForward_talonFx));
+        */
       }
       if (runningX) {
         SmartDashboard.getNumber(smartDashboadMotorX, speedX);
