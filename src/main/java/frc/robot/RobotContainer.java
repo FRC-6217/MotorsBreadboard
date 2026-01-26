@@ -37,8 +37,11 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    // Schedule command when the Xbox controller's B button is pressed.
-    m_driverController.b().debounce(0.5).whileTrue(new ToggleMotor('B'));
+    // Schedule command when the Xbox controller's buttons are pressed.
+    m_driverController.a().debounce(OperatorConstants.debounceTime).onTrue(new ToggleMotor('A'));
+    m_driverController.b().debounce(OperatorConstants.debounceTime).onTrue(new ToggleMotor('B'));
+    m_driverController.x().debounce(OperatorConstants.debounceTime).onTrue(new ToggleMotor('X'));
+    m_driverController.y().debounce(OperatorConstants.debounceTime).onTrue(new ToggleMotor('Y'));
   }
 
   /**

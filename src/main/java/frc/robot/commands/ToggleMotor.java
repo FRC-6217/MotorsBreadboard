@@ -7,23 +7,26 @@ import edu.wpi.first.wpilibj2.command.Command;
 public class ToggleMotor extends Command {
   @SuppressWarnings("PMD.UnusedPrivateField")
   Motors motors;
+  char motor;
   /**
    * Creates a new ToggleMotor Command.
    */
-  public ToggleMotor(char button) {
+  public ToggleMotor(char buttonPressed) {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(motors);
+    motor = buttonPressed;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    
+    motors.toggleMotor(motor);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+  }
 
   // Called once the command ends or is interrupted.
   @Override
