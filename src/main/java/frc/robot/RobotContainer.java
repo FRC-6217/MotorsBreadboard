@@ -6,6 +6,7 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.ToggleMotor;
+import frc.robot.subsystems.Motors;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -20,6 +21,8 @@ public class RobotContainer {
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
+  public Robot robot = new Robot();
+  public final Motors motors = new Motors();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -38,10 +41,10 @@ public class RobotContainer {
    */
   private void configureBindings() {
     // Schedule command when the Xbox controller's buttons are pressed.
-    m_driverController.a().debounce(OperatorConstants.debounceTime).onTrue(new ToggleMotor('A'));
-    m_driverController.b().debounce(OperatorConstants.debounceTime).onTrue(new ToggleMotor('B'));
-    m_driverController.x().debounce(OperatorConstants.debounceTime).onTrue(new ToggleMotor('X'));
-    m_driverController.y().debounce(OperatorConstants.debounceTime).onTrue(new ToggleMotor('Y'));
+    m_driverController.a().debounce(OperatorConstants.debounceTime).onTrue(new ToggleMotor(motors, 'A'));
+    m_driverController.b().debounce(OperatorConstants.debounceTime).onTrue(new ToggleMotor(motors, 'B'));
+    m_driverController.x().debounce(OperatorConstants.debounceTime).onTrue(new ToggleMotor(motors, 'X'));
+    m_driverController.y().debounce(OperatorConstants.debounceTime).onTrue(new ToggleMotor(motors, 'Y'));
   }
 
   /**

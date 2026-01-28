@@ -6,12 +6,13 @@ import edu.wpi.first.wpilibj2.command.Command;
 /** An command to toggle motors. */
 public class ToggleMotor extends Command {
   @SuppressWarnings("PMD.UnusedPrivateField")
-  Motors motors;
+  private Motors motors;
   char motor;
   /**
    * Creates a new ToggleMotor Command.
    */
-  public ToggleMotor(char buttonPressed) {
+  public ToggleMotor(Motors motors, char buttonPressed) {
+    this.motors = motors;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(motors);
     motor = buttonPressed;

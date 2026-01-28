@@ -18,8 +18,8 @@ public final class Constants {
     public static final double debounceTime = 0.1;
   }
   public static class MotorConstants {
-    public static final int kMotorACANId = 20;
-    public static final int kMotorBCANId = 21;
+    public static final int kMotorACANId = 15;
+    public static final int kMotorBCANId = 16;
     public static final int kMotorXCANId = 22;
     public static final int kMotorYCANId = 23;
 
