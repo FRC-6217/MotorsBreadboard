@@ -23,7 +23,7 @@ public final class Constants {
     public static final int kMotorXCANId = 22;
     public static final int kMotorYCANId = 23;
 
-    public static final double initialMotorSpeed = 0.25;
+    public static final double initialMotorSpeed = -0.25;
 
     // Talon FX PID Constants
     public static final double kS_talonFx = 0.10; // Add 0.1 V output to overcome static friction

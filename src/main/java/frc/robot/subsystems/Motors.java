@@ -22,10 +22,10 @@ public class Motors extends SubsystemBase {
   private SparkMax motorY;
   private RelativeEncoder encoderX;
   private RelativeEncoder encoderY;
-  private int speedA = 0;
-  private int speedB = 0;
-  private int speedX = 0;
-  private int speedY = 0;
+  private double speedA = 0;
+  private double speedB = 0;
+  private double speedX = 0;
+  private double speedY = 0;
   private boolean runningA = false;
   private boolean runningB = false;
   private boolean runningX = false;
@@ -38,6 +38,7 @@ public class Motors extends SubsystemBase {
   private String smartDashboadMotorB_V = "Kraken Motor Velocity B";
   private String smartDashboadMotorX_V = "NEO Motor Velocity X";
   private String smartDashboadMotorY_V = "NEO Motor Velocity Y";
+  private String smartDashboadMotorToggled = "Motor Toggled";
 
   /** Creates a new Subsystem. */
   public Motors() {
@@ -70,6 +71,7 @@ public class Motors extends SubsystemBase {
   }
 
   public void toggleMotor (char motor) {
+    SmartDashboard.putString(smartDashboadMotorToggled, String.valueOf(motor));
     if (motor == 'A') {
       runningA = !runningA;
     }
@@ -82,15 +84,17 @@ public class Motors extends SubsystemBase {
     if (motor == 'Y') {
       runningY = !runningY;
     }
-  }
+    SmartDashboard.putBoolean("Running A", runningA);;
+    SmartDashboard.putBoolean("Running B", runningB);;
+    SmartDashboard.putBoolean("Running X", runningX);;
+    SmartDashboard.putBoolean("Running Y", runningY);;
 
-  @Override
-  public void periodic() {
       // Get speed from dashboard and run/stop motors
       // A Button Motor - Kraken 
       if (runningA) {
-        SmartDashboard.getNumber(smartDashboadMotorA, speedA);
+        speedA = SmartDashboard.getNumber(smartDashboadMotorA, MotorConstants.initialMotorSpeed);
         motorA.setControl(new DutyCycleOut(speedA));
+        SmartDashboard.putString("Running Motor Speed", "A: " + String.valueOf(speedA));
         /* 
         // Use PID Control
         // set velocity based on max speed and requested percentage
@@ -106,8 +110,9 @@ public class Motors extends SubsystemBase {
       }
       // B Button Motor - Kraken
       if (runningB) {
-        SmartDashboard.getNumber(smartDashboadMotorB, speedB);
+        speedB = SmartDashboard.getNumber(smartDashboadMotorB, MotorConstants.initialMotorSpeed);
         motorB.setControl(new DutyCycleOut(speedB));
+        SmartDashboard.putString("Running Motor Speed", "B: " + String.valueOf(speedB));
         /* 
         // Use PID Control
         // set velocity based on max speed and requested percentage
@@ -123,7 +128,7 @@ public class Motors extends SubsystemBase {
       }
       // X Button Motor - NEO 
       if (runningX) {
-        SmartDashboard.getNumber(smartDashboadMotorX, speedX);
+        speedX = SmartDashboard.getNumber(smartDashboadMotorX, MotorConstants.initialMotorSpeed);
         motorX.set(speedX);
       }
       else {
@@ -131,12 +136,16 @@ public class Motors extends SubsystemBase {
       }
       // Y Button Motor - NEO
       if (runningY) {
-        SmartDashboard.getNumber(smartDashboadMotorY, speedY);
+        speedY = SmartDashboard.getNumber(smartDashboadMotorY, MotorConstants.initialMotorSpeed);
         motorX.set(speedY);
       }
       else {
         motorY.set(0);
       }
+  } 
+
+  @Override
+  public void periodic() {
       // Display motor current speed in RPM
       SmartDashboard.putNumber(smartDashboadMotorA_V, motorA.getVelocity().getValueAsDouble() * 60);
       SmartDashboard.putNumber(smartDashboadMotorB_V, motorB.getVelocity().getValueAsDouble() * 60);
