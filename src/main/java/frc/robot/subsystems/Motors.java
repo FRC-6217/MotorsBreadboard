@@ -39,6 +39,7 @@ public class Motors extends SubsystemBase {
   private String smartDashboadMotorX_V = "NEO Motor Velocity X";
   private String smartDashboadMotorY_V = "NEO Motor Velocity Y";
   private String smartDashboadMotorToggled = "Motor Toggled";
+  private VelocityVoltage velocityRequest;
 
   /** Creates a new Subsystem. */
   public Motors() {
@@ -67,7 +68,7 @@ public class Motors extends SubsystemBase {
     motorB.getConfigurator().apply(slot0Configs);
 
     // create a velocity closed-loop request, voltage output, slot 0 configs
-    final VelocityVoltage velocityRequest = new VelocityVoltage(0).withSlot(0);
+    velocityRequest = new VelocityVoltage(0).withSlot(0);
   }
 
   public void toggleMotor (char motor) {
@@ -93,13 +94,14 @@ public class Motors extends SubsystemBase {
       // A Button Motor - Kraken 
       if (runningA) {
         speedA = SmartDashboard.getNumber(smartDashboadMotorA, MotorConstants.initialMotorSpeed);
+        /* 
         motorA.setControl(new DutyCycleOut(speedA));
         SmartDashboard.putString("Running Motor Speed", "A: " + String.valueOf(speedA));
-        /* 
+        */
         // Use PID Control
         // set velocity based on max speed and requested percentage
         motorA.setControl(velocityRequest.withVelocity(MotorConstants.maxRPS_talonFx * speedA).withFeedForward(MotorConstants.feedForward_talonFx));
-        */
+        SmartDashboard.putString("Running Motor Speed", "A: " + String.valueOf(MotorConstants.maxRPS_talonFx * speedA));
       }
       else {
         motorA.setControl(new DutyCycleOut(0));
@@ -111,13 +113,14 @@ public class Motors extends SubsystemBase {
       // B Button Motor - Kraken
       if (runningB) {
         speedB = SmartDashboard.getNumber(smartDashboadMotorB, MotorConstants.initialMotorSpeed);
+        /* 
         motorB.setControl(new DutyCycleOut(speedB));
         SmartDashboard.putString("Running Motor Speed", "B: " + String.valueOf(speedB));
-        /* 
+        */
         // Use PID Control
         // set velocity based on max speed and requested percentage
         motorB.setControl(velocityRequest.withVelocity(MotorConstants.maxRPS_talonFx * speedB).withFeedForward(MotorConstants.feedForward_talonFx));
-        */
+        SmartDashboard.putString("Running Motor Speed", "B: " + String.valueOf(MotorConstants.maxRPS_talonFx * speedB));
       }
       else {
         motorB.setControl(new DutyCycleOut(0));
